@@ -26,6 +26,7 @@ if [ -f configure ]; then
 fi
 
 dir=$(mktemp -t ocaml-XXXX)
+rm -fr $dir
 mkdir -p $dir
 
 echo "-----> Fetching OCaml binaries"
