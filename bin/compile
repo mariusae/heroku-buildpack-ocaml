@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir>
+
+set -e
+set -o pipefail
+
+url=http://heroku-buildpack-ocaml.s3.amazonaws.com/ocaml-3.12.1.tgz
+
+BUILD_DIR=$1
+CACHE_DIR=$2
+
+function indent() {
+  c='s/^/       /'
+  case $(uname) in
+    Darwin) sed -l "$c";;
+    *)      sed -u "$c";;
+  esac
+}
+
+cd $BUILD_DIR
+
+# configure
+if [ -f configure ]; then
+  echo "-----> Configuring"
+  ./configure 2>&1 | indent
+fi
+
+dir=$(mktemp -t ocaml-XXXX)
+mkdir -p $dir
+
+echo "-----> Fetching OCaml binaries"
+curl  $url -s -o - | tar xzf - -C $dir
+
+# make
+echo "-----> Compiling with Make"
+
+export PATH="$dir:$PATH"
+make 2>&1 | indent
