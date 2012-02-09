@@ -35,5 +35,5 @@ curl  $url -s -o - | tar xzf - -C $dir
 # make
 echo "-----> Compiling with Make"
 
-export PATH="$dir:$PATH"
+export PATH="$dir/bin:$PATH"
 make 2>&1 | indent
