@@ -32,8 +32,10 @@ mkdir -p $dir
 echo "-----> Fetching OCaml binaries"
 curl  $url -s -o - | tar xzf - -C $dir
 
+echo "-----> Prepending $dir/bin to PATH"
+export PATH="$dir/bin:$PATH"
+
 # make
 echo "-----> Compiling with Make"
 
-export PATH="$dir/bin:$PATH"
 make 2>&1 | indent
